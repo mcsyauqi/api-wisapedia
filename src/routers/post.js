@@ -1,13 +1,33 @@
 const express = require('express')
+const multer = require('multer')
+const sharp = require('sharp')
 const Post = require('../models/post')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/posts', auth, async (req, res) => {
-    // const post = new Post(req.body)
+const upload = multer({
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload JPG,JPEG, or PNG'))
+        }
+
+        cb(undefined, true)
+    }
+})
+
+router.post('/posts', auth, upload.single('image'), async (req, res) => {
+    const buffer = await sharp(req.file.buffer).resize({
+        width: 250,
+        height: 250
+    }).png().toBuffer()
+
     const post = new Post({
         ...req.body,
-        owner: req.user._id
+        owner: req.user._id,
+        image: buffer
     })
 
     try {
