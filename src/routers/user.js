@@ -101,6 +101,39 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
     }
 })
 
+router.post('/users/bookmarks/:postId', auth, async (req, res) => {
+
+    const postId = req.params.postId
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        await user.bookmarks.push(postId);
+        
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+        console.log(e)
+    }
+})
+
+router.post('/users/trips/:postId', auth, async (req, res) => {
+
+    const postId = req.params.postId
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        await user.trips.push(postId);
+        
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.get('/users/bookmarks', auth, async (req, res) => {
 
     try {
@@ -254,39 +287,6 @@ router.delete('/users/me', auth, async (req, res) => {
         await req.user.remove()
         sendCancelationEmail(req.user.email, req.user.name)
         res.send(req.user)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.post('/users/bookmarks/:postId', auth, async (req, res) => {
-
-    const postId = req.params.postId
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        await user.bookmarks.push(postId);
-        
-        user.save()
-        res.status(200).send(user)
-    } catch (e) {
-        res.status(400).send(e)
-        console.log(e)
-    }
-})
-
-router.post('/users/trips/:postId', auth, async (req, res) => {
-
-    const postId = req.params.postId
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        await user.trips.push(postId);
-        
-        user.save()
-        res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
     }
