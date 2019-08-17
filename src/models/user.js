@@ -49,9 +49,10 @@ const userSchema = new mongoose.Schema({
         type: Buffer
     },
     bookmarks: [{
-        bookmark: {
             type: mongoose.Schema.Types.ObjectId
-        }
+    }],
+    trips: [{
+            type: mongoose.Schema.Types.ObjectId
     }]
 }, {
     timestamps: true

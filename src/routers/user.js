@@ -101,6 +101,94 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
     }
 })
 
+router.get('/users/bookmarks', auth, async (req, res) => {
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        if (user.bookmarks.length == 0) {
+            return res.status(404).send()
+        }
+
+        const post = await Post.find({
+            _id: user.bookmarks
+        })
+    
+        res.send(post)
+    } catch (e) {
+        res.status(400).send(e)
+        console.log(e)
+    }
+})
+
+router.delete('/users/bookmarks/:postId', auth, async (req, res) => {
+
+    const postId = req.params.postId
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        user.bookmarks =  await user.bookmarks.filter(item => item !== postId)
+
+        var remain = user.bookmarks.filter(function(value, index, arr){
+
+            return value != postId;
+        
+        });
+
+        user.bookmarks = remain
+
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.get('/users/trips', auth, async (req, res) => {
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        if (user.trips.length == 0) {
+            return res.status(404).send()
+        }
+
+        const post = await Post.find({
+            _id: user.trips
+        })
+    
+        res.send(post)
+    } catch (e) {
+        res.status(400).send(e)
+        console.log(e)
+    }
+})
+
+router.delete('/users/trips/:postId', auth, async (req, res) => {
+
+    const postId = req.params.postId
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        user.trips =  await user.trips.filter(item => item !== postId)
+
+        var remain = user.trips.filter(function(value, index, arr){
+
+            return value != postId;
+        
+        });
+
+        user.trips = remain
+
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.get('/users/:userId/avatar', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId)
@@ -171,15 +259,16 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
-router.put('/users/bookmarks/:postId', auth, async (req, res) => {
+router.post('/users/bookmarks/:postId', auth, async (req, res) => {
 
     const postId = req.params.postId
 
     try {
-        const user = await User.findByIdAndUpdate(req.user._id, {
-            'bookmarks.bookmark': postId
-        })
-        await user.save()
+        const user = await User.findById(req.user._id)
+
+        await user.bookmarks.push(postId);
+        
+        user.save()
         res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
@@ -187,10 +276,20 @@ router.put('/users/bookmarks/:postId', auth, async (req, res) => {
     }
 })
 
-// router.get('/users/:userId/bookmarks')
+router.post('/users/trips/:postId', auth, async (req, res) => {
 
-// router.delete('/users/:userId/bookmarks/:bookmarksId')
+    const postId = req.params.postId
 
-// router.post('/users/:userId/trip')
+    try {
+        const user = await User.findById(req.user._id)
+
+        await user.trips.push(postId);
+        
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
 
 module.exports = router
