@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         }
     }],
     avatar: {
-        type: Buffer
+        type: String
     },
     bookmarks: [{
             type: mongoose.Schema.Types.ObjectId

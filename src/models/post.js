@@ -38,7 +38,7 @@ const postSchema = new mongoose.Schema({
         ref: 'User'
     },
     image: {
-        type: Buffer
+        type: String
     }
 }, {
     timestamps: true
