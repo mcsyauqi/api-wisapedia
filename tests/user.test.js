@@ -91,8 +91,8 @@ test('Should upload avatar image', async () => {
         .attach('avatar', 'tests/fixtures/profile-pic.jpg')
         .expect(200)
     const user = await User.findById(userOneId)
-    expect(user.avatar).toEqual(expect.any(Buffer))
-})
+    expect(user.avatar).toEqual(expect.any(String))
+}, 30000)
 
 test('Should update valid user fields', async () => {
     await request(app)

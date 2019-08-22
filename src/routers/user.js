@@ -3,6 +3,7 @@ const User = require('../models/user')
 const Post = require('../models/post')
 const auth = require('../middleware/auth')
 const upload = require('../services/file-upload')
+const aws = require('aws-sdk')
 const {
     sendWelcomeEmail,
     sendCancelationEmail
@@ -46,7 +47,7 @@ router.post('/users/logout', auth, async (req, res) => {
             return token.token !== req.token
         })
         await req.user.save()
-        res.send()
+        res.send({success: "Logout success!"})
     } catch (e) {
         res.status(500).send()
     }
@@ -56,7 +57,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = []
         await req.user.save()
-        res.send()
+        res.send({success: "Logout all success!"})
     } catch (e) {
         res.status(500).send()
     }
@@ -77,9 +78,25 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
         if (!req.user.avatar) {
             return res.status(404).send('Avatar not found')
         }
-        req.user.avatar = undefined
-        await req.user.save()
-        res.send()
+
+        const s3 = new aws.S3()
+
+        const params = {
+            Bucket: "wisapedia-uploads",
+            Key: req.user.avatar.slice(58)
+        }
+
+        try {
+            await s3.deleteObject(params).promise()
+        }
+        catch (err) {
+            res.send({error: "ERROR in file Deleting : " + JSON.stringify(err)})
+        }
+
+            req.user.avatar = undefined
+
+            await req.user.save()
+            res.send({success: "File deleted successfully"})
     } catch (e) {
         res.status(400).send(e)
     }

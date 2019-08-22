@@ -1,7 +1,9 @@
 const express = require('express')
+const User = require('../models/user')
 const Post = require('../models/post')
 const auth = require('../middleware/auth')
 const upload = require('../services/file-upload')
+const aws = require('aws-sdk')
 
 const router = new express.Router()
 
@@ -19,6 +21,15 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
             image: req.file.location
         })
     
+        const postId = post._id
+
+            const user = await User.findById(req.user._id)
+
+            await user.trips.push(postId);
+            
+            user.save()
+            
+
         try {
             await post.save()
             res.status(201).send(post)
@@ -30,41 +41,12 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
 
 router.get('/posts/me', auth, async (req, res) => {
     try {
-        // GET /posts?completed=true
-        // GET /posts?limit=10&skip=20
-        // GET /posts?sortBy=createdAt:desc
+        const post = await Post.find({owner: req.user._id})
 
-        // const posts = await Post.find({
-        //     owner: req.user._id,
-        // })
-        // res.send(posts)
-
-        const match = {}
-        const sort = {}
-
-        if (req.query.completed) {
-            match.completed = req.query.completed === 'true'
+        if (!post) {
+            return res.status(404).send()
         }
-
-        if (req.query.sortBy) {
-            const parts = req.query.sortBy.split(':')
-            sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-        }
-
-        if (!req.user.posts) {
-            res.status(404).send()
-        }
-
-        await req.user.populate({
-            path: 'posts',
-            match,
-            options: {
-                limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip),
-                sort
-            }
-        }).execPopulate()
-        res.send(req.user.posts)
+        res.send(post)
     } catch (e) {
         res.status(500).send(e)
     }
@@ -102,6 +84,7 @@ router.get('/posts/:postId', auth, async (req, res) => {
 })
 
 router.patch('/posts/:postId', auth, async (req, res) => {
+    console.log(req.body)
     const updates = Object.keys(req.body)
     const allowedUpates = ['destination', 'start','finish', 'person','route', 'description']
     const isValidOperation = updates.every((update) => allowedUpates.includes(update))
@@ -132,6 +115,25 @@ router.patch('/posts/:postId', auth, async (req, res) => {
 
 router.delete('/posts/:postId', auth, async (req, res) => {
     try {
+        const s3 = new aws.S3()
+
+        const deletePostDatabase = await Post.findOne({
+            _id: req.params.postId,
+            owner: req.user._id
+        })
+
+        const params = {
+            Bucket: "wisapedia-uploads",
+            Key: deletePostDatabase.image.slice(58)
+        }
+
+        try {
+            await s3.deleteObject(params).promise()
+        }
+        catch (err) {
+            res.send({error: "ERROR in post Deleting : " + JSON.stringify(err)})
+        }
+
         const post = await Post.findOneAndDelete({
             _id: req.params.postId,
             owner: req.user._id
@@ -141,7 +143,7 @@ router.delete('/posts/:postId', auth, async (req, res) => {
             return res.status(404).send()
         }
 
-        res.send(post)
+        res.send({success: "Post deleted Successfully"})
     } catch (e) {
         res.status(400).send(e)
     }
