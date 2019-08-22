@@ -1,15 +1,15 @@
 const express = require('express')
-const multer = require('multer')
-const sharp = require('sharp')
-const path = require('path')
 const User = require('../models/user')
 const Post = require('../models/post')
 const auth = require('../middleware/auth')
+const upload = require('../services/file-upload')
 const {
     sendWelcomeEmail,
     sendCancelationEmail
 } = require('../emails/account')
+
 const router = new express.Router()
+
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
@@ -62,48 +62,10 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     }
 })
 
-// const upload = multer({
-//     limits: {
-//         fileSize: 1000000
-//     },
-//     fileFilter(req, file, cb) {
-//         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-//             return cb(new Error('Please upload JPG,JPEG, or PNG'))
-//         }
-
-//         cb(undefined, true)
-//     }
-// })
-
-const upload = multer({
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload JPG,JPEG, or PNG'))
-        }
-
-        cb(undefined, true)
-    },
-    storage: multer.diskStorage({
-        destination: './uploads/ava-images',
-        filename: function(req, file, cb) {
-            cb(null, req.user.name + '-' + Date.now() + '-' + file.originalname);
-        }
-    })
-})
-
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-    // const buffer = await sharp(req.file.buffer).resize({
-    //     width: 250,
-    //     height: 250
-    // }).png().toBuffer()
-    // req.user.avatar = buffer
-
-    req.user.avatar = path.normalize(req.protocol + "://" + req.hostname + '/' + req.file.path)
+    req.user.avatar = req.file.location
     await req.user.save()
-    res.send()
+    res.send({'avatar': req.file.location})
 }, (error, req, res, next) => {
     res.status(400).send({
         error: error.message

@@ -1,36 +1,12 @@
 const express = require('express')
-const multer = require('multer')
-const sharp = require('sharp')
 const Post = require('../models/post')
 const auth = require('../middleware/auth')
-const path = require('path')
+const upload = require('../services/file-upload')
+
 const router = new express.Router()
 
-const upload = multer({
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload JPG,JPEG, or PNG'))
-        }
-
-        cb(undefined, true)
-    },
-    storage: multer.diskStorage({
-        destination: './uploads/post-images',
-        filename: function(req, file, cb) {
-            cb(null, req.user.name + '-' + Date.now() + '-' + file.originalname);
-        }
-    })
-})
 
 router.post('/posts', auth, upload.single('image'), async (req, res) => {
-    // const buffer = await sharp(req.file.buffer).resize({
-    //     width: 250,
-    //     height: 250
-    // }).png().toBuffer()
-
     if (!req.file) {
         return res.send({
           error: "No file received"
@@ -40,7 +16,7 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
         const post = new Post({
             ...req.body,
             owner: req.user._id,
-            image: path.normalize(req.protocol + "://" + req.hostname + '/' + req.file.path)
+            image: req.file.location
         })
     
         try {
@@ -50,9 +26,6 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
             res.status(400).send(e)
         }
     }
-      
-
-    
 })
 
 router.get('/posts/me', auth, async (req, res) => {
