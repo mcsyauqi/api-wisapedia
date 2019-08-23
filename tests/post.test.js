@@ -18,15 +18,13 @@ test('Should create post for user', async () => {
     const response = await request(app)
         .post('/posts')
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
-        .send({
-            destination: 'Pantai Parangtritis',
-            description: 'Ayo jalan-jalan',
-            completed: false,
-            route: 'Bantul-Sleman',
-            person: 5,
-            start: '2019-05-18T16:00:00.000Z',
-            finish: '2019-05-18T16:00:00.000Z'
-        })
+        .field('destination', 'Pantai Parangtritis')
+        .field('description', 'Ayo jalan-jalan')
+        .field('route', 'Bantul-Sleman')
+        .field('person', '5')
+        .field('start', '2019-05-18T16:00:00.000Z')
+        .field('finish', '2019-05-18T16:00:00.000Z')
+        .attach('image', 'tests/fixtures/profile-pic.jpg')
         .expect(201)
 
     const post = await Post.findById(response.body._id)
