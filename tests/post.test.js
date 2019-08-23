@@ -45,7 +45,7 @@ test('Should get user posts', async () => {
 })
 
 test('Should not delete other user posts', async () => {
-    const response = await request(app)
+    await request(app)
         .delete(`/posts/${postOne._id}`)
         .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
         .send()

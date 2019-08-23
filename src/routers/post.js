@@ -14,23 +14,22 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
           error: "No file received"
         });
       } 
-    else {
-        const post = new Post({
-            ...req.body,
-            owner: req.user._id,
-            image: req.file.location
-        })
-    
-        const postId = post._id
-
-            const user = await User.findById(req.user._id)
-
-            await user.trips.push(postId);
-            
-            user.save()
-            
-
+    else {    
         try {
+            const post = new Post({
+                ...req.body,
+                owner: req.user._id,
+                image: req.file.location
+            })
+        
+            const postId = post._id
+    
+                const user = await User.findById(req.user._id)
+    
+                await user.trips.push(postId);
+                
+                user.save()
+                
             await post.save()
             res.status(201).send(post)
         } catch (e) {
@@ -127,11 +126,10 @@ router.delete('/posts/:postId', auth, async (req, res) => {
             Key: deletePostDatabase.image.slice(58)
         }
 
-        try {
-            await s3.deleteObject(params).promise()
-        }
-        catch (err) {
-            res.send({error: "ERROR in post Deleting : " + JSON.stringify(err)})
+        await s3.deleteObject(params)
+
+        if (!post) {
+            return res.status(404).send()
         }
 
         const post = await Post.findOneAndDelete({
@@ -139,13 +137,10 @@ router.delete('/posts/:postId', auth, async (req, res) => {
             owner: req.user._id
         })
 
-        if (!post) {
-            return res.status(404).send()
-        }
 
         res.send({success: "Post deleted Successfully"})
     } catch (e) {
-        res.status(400).send(e)
+        res.status(404).send(e)
     }
 })
 
