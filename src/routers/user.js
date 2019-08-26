@@ -141,7 +141,7 @@ router.get('/users/bookmarks', auth, async (req, res) => {
         const user = await User.findById(req.user._id)
 
         if (user.bookmarks.length == 0) {
-            return res.status(404).send()
+            return res.status(404).send({error: "No bookmarks found!"})
         }
 
         const post = await Post.find({
