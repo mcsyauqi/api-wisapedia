@@ -128,18 +128,19 @@ router.delete('/posts/:postId', auth, async (req, res) => {
 
         await s3.deleteObject(params)
 
-        if (!post) {
-            return res.status(404).send()
-        }
-
         const post = await Post.findOneAndDelete({
             _id: req.params.postId,
             owner: req.user._id
         })
 
+        if (!post) {
+            return res.status(404).send()
+        }
+
 
         res.send({success: "Post deleted Successfully"})
     } catch (e) {
+        console.log(e)
         res.status(404).send(e)
     }
 })
