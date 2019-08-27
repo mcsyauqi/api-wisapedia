@@ -35,7 +35,7 @@ const postOne = {
     description: 'Ayo jalan-jalan',
     completed: false,
     route: 'Bantul-Sleman',
-    person: 5,
+    capacity: 5,
     start: '2019-05-18T16:00:00.000Z',
     finish: '2019-05-18T16:00:00.000Z',
     owner: userOne._id
@@ -47,7 +47,7 @@ const postTwo = {
     description: 'Ayo jalan',
     completed: false,
     route: 'Jogja-Cilacap',
-    person: 5,
+    capacity: 5,
     start: '2019-05-18T16:00:00.000Z',
     finish: '2019-05-18T16:00:00.000Z',
     owner: userOne._id
@@ -59,7 +59,7 @@ const postThree = {
     description: 'Ayo jalan',
     completed: false,
     route: 'Jogja-Cilacap',
-    person: 5,
+    capacity: 5,
     start: '2019-05-18T16:00:00.000Z',
     finish: '2019-05-18T16:00:00.000Z',
     owner: userTwo._id

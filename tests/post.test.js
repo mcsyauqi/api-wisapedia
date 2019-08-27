@@ -21,7 +21,7 @@ test('Should create post for user', async () => {
         .field('destination', 'Pantai Parangtritis')
         .field('description', 'Ayo jalan-jalan')
         .field('route', 'Bantul-Sleman')
-        .field('person', '5')
+        .field('capacity', '5')
         .field('start', '2019-05-18T16:00:00.000Z')
         .field('finish', '2019-05-18T16:00:00.000Z')
         .attach('image', 'tests/fixtures/profile-pic.jpg')
@@ -30,7 +30,7 @@ test('Should create post for user', async () => {
     const post = await Post.findById(response.body._id)
     expect(post).not.toBeNull()
     expect(post.completed).toEqual(false)
-})
+}, 30000)
 
 test('Should get user posts', async () => {
     const response = await request(app)
