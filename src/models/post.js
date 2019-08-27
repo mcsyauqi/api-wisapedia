@@ -14,10 +14,13 @@ const postSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    person: {
+    capacity: {
         type: Number,
         required: true,
     },
+    person: [{
+        type: mongoose.Schema.Types.ObjectId
+    }],
     route: {
         type: String,
         required: true,

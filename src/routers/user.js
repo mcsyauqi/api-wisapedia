@@ -128,6 +128,21 @@ router.post('/users/trips/:postId', auth, async (req, res) => {
         const user = await User.findById(req.user._id)
 
         await user.trips.push(postId);
+
+        const post = await Post.findById(postId)
+
+        if (post.capacity > post.person.length) {
+            userOnTrip = post.person.includes(req.user._id);
+
+            if(userOnTrip ==  false) {
+                await post.person.push(req.user._id);
+                post.save()
+            } else {
+                return res.send({error: "You joined already!"})
+            }
+        } else {
+            return res.send({error: "Full capacity!"})
+        }
         
         user.save()
         res.status(200).send(user)

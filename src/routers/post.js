@@ -19,7 +19,8 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
             const post = new Post({
                 ...req.body,
                 owner: req.user._id,
-                image: req.file.location
+                image: req.file.location,
+                person: [req.user._id]
             })
         
             const postId = post._id
