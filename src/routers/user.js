@@ -25,7 +25,6 @@ router.post('/users', async (req, res) => {
         })
     } catch (e) {
         res.status(400).send(e)
-        console.log(e)
     }
 })
 
@@ -110,13 +109,17 @@ router.post('/users/bookmarks/:postId', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
 
-        await user.bookmarks.push(postId);
-        
-        user.save()
-        res.status(200).send(user)
+        userBookmarks = user.bookmarks.includes(postId);
+
+            if(userBookmarks ==  false) {
+                await user.bookmarks.push(postId);
+                user.save()
+                res.status(200).send(user)
+            } else {
+                return res.send({error: "Already bookmark this post!"})
+            }
     } catch (e) {
         res.status(400).send(e)
-        console.log(e)
     }
 })
 
@@ -167,7 +170,6 @@ router.get('/users/bookmarks', auth, async (req, res) => {
         res.send(post)
     } catch (e) {
         res.status(400).send(e)
-        console.log(e)
     }
 })
 
@@ -211,7 +213,6 @@ router.get('/users/trips', auth, async (req, res) => {
         res.send(post)
     } catch (e) {
         res.status(400).send(e)
-        console.log(e)
     }
 })
 

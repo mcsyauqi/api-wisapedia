@@ -84,7 +84,6 @@ router.get('/posts/:postId', auth, async (req, res) => {
 })
 
 router.patch('/posts/:postId', auth, async (req, res) => {
-    console.log(req.body)
     const updates = Object.keys(req.body)
     const allowedUpates = ['destination', 'start','finish', 'person','route', 'description']
     const isValidOperation = updates.every((update) => allowedUpates.includes(update))
@@ -141,7 +140,6 @@ router.delete('/posts/:postId', auth, async (req, res) => {
 
         res.send({success: "Post deleted Successfully"})
     } catch (e) {
-        console.log(e)
         res.status(404).send(e)
     }
 })
