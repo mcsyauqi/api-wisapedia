@@ -53,7 +53,11 @@ const userSchema = new mongoose.Schema({
     }],
     trips: [{
             type: mongoose.Schema.Types.ObjectId
-    }]
+    }],
+    verified: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 })

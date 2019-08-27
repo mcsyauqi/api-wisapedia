@@ -25,6 +25,7 @@ router.post('/users', async (req, res) => {
         })
     } catch (e) {
         res.status(400).send(e)
+        console.log(e)
     }
 })
 
@@ -288,6 +289,27 @@ router.delete('/users/me', auth, async (req, res) => {
         await req.user.remove()
         sendCancelationEmail(req.user.email, req.user.name)
         res.send(req.user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.post('/users/verifyme/:verificationCode', auth, async (req, res) => {
+
+
+    const verificationCode = req.params.verificationCode
+
+    try {
+        if (req.user._id.toString().slice(19) == verificationCode) {
+            const user = await User.findById(req.user._id);
+
+            user.verified = true;
+
+            user.save()
+            res.status(200).send({succes: "Verified successfully!"})
+        } else {
+            res.send({error: "Wrong verification code!"})
+        }
     } catch (e) {
         res.status(400).send(e)
     }
