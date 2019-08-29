@@ -30,7 +30,7 @@ test('Should create post for user', async () => {
     const post = await Post.findById(response.body._id)
     expect(post).not.toBeNull()
     expect(post.completed).toEqual(false)
-}, 30000)
+}, 40000)
 
 test('Should get user posts', async () => {
     const response = await request(app)

@@ -35,6 +35,7 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
             res.status(201).send(post)
         } catch (e) {
             res.status(400).send(e)
+            console.log(e)
         }
     }
 })

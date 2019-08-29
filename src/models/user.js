@@ -46,7 +46,8 @@ const userSchema = new mongoose.Schema({
         }
     }],
     avatar: {
-        type: String
+        type: String,
+        default: 'https://wisapedia-uploads.s3-ap-southeast-1.amazonaws.com/default_ava.png'
     },
     bookmarks: [{
             type: mongoose.Schema.Types.ObjectId
