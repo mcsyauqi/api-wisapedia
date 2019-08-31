@@ -259,6 +259,7 @@ router.get('/users/me', auth, async (req, res) => {
     try {
         const me = await User.findById(req.user._id)
 
+        console.log(me)
         res.send(me)
     } catch (e) {
         res.status(500).send(e)
