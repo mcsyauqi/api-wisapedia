@@ -259,7 +259,6 @@ router.get('/users/me', auth, async (req, res) => {
     try {
         const me = await User.findById(req.user._id)
 
-        console.log(me)
         res.send(me)
     } catch (e) {
         res.status(500).send(e)
@@ -281,7 +280,7 @@ router.get('/users/:userId', auth, async (req, res) => {
 
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpates = ['name', 'email', 'password', 'number', 'birthday']
+    const allowedUpates = ['name', 'email', 'password', 'number', 'birthday', 'bio']
     const isValidOperation = updates.every((update) => allowedUpates.includes(update))
 
     if (!isValidOperation) {
