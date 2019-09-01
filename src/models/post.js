@@ -42,6 +42,9 @@ const postSchema = new mongoose.Schema({
     },
     image: {
         type: String
+    },
+    wa: {
+        type: Number,
     }
 }, {
     timestamps: true
