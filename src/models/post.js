@@ -45,6 +45,9 @@ const postSchema = new mongoose.Schema({
     },
     wa: {
         type: Number,
+    },
+    budget: {
+        type: Number,
     }
 }, {
     timestamps: true
