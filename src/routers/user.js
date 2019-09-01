@@ -6,7 +6,8 @@ const upload = require('../services/file-upload')
 const aws = require('aws-sdk')
 const {
     sendWelcomeEmail,
-    sendCancelationEmail
+    sendCancelationEmail,
+    sendContactUsEmail
 } = require('../emails/account')
 
 const router = new express.Router()
@@ -326,6 +327,18 @@ router.post('/users/verifyme/:verificationCode', auth, async (req, res) => {
         } else {
             res.send({error: "Wrong verification code!"})
         }
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.post('/users/contact-us/:description', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id)
+        const description = req.params.description
+
+        sendContactUsEmail(user.email, user.name, description)
+        res.status(200).send({success: "Ticket sent!"})
     } catch (e) {
         res.status(400).send(e)
     }

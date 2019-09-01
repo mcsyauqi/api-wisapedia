@@ -20,7 +20,17 @@ const sendCancelationEmail = (email, name) => {
     })
 }
 
+const sendContactUsEmail = (email, name, description) => {
+    sgMail.send({
+        to: 'ahmadthariqsyauqi@gmail.com',
+        from: 'info@wisapedia.com',
+        subject: `Contact us ticket by ${name} (${email})`,
+        text: description
+    })
+}
+
 module.exports = {
     sendWelcomeEmail,
-    sendCancelationEmail
+    sendCancelationEmail,
+    sendContactUsEmail
 }
