@@ -284,6 +284,12 @@ router.patch('/users/me', auth, async (req, res) => {
     const allowedUpates = ['name', 'email', 'password', 'number', 'birthday', 'bio']
     const isValidOperation = updates.every((update) => allowedUpates.includes(update))
 
+    if (updates.length == 0) {
+        return res.status(400).send({
+            error: 'There is no update!'
+        })
+    }
+
     if (!isValidOperation) {
         return res.status(400).send({
             error: 'Invalid updates!'
