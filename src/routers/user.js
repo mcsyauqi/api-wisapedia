@@ -325,7 +325,7 @@ router.post('/users/verifyme/:verificationCode', auth, async (req, res) => {
             user.save()
             res.status(200).send({succes: "Verified successfully!"})
         } else {
-            res.send({error: "Wrong verification code!"})
+            res.status(400).send({error: "Wrong verification code!"})
         }
     } catch (e) {
         res.status(400).send(e)
