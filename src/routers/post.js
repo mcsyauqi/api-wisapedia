@@ -152,9 +152,10 @@ router.get('/posts/search/:word', auth, async (req, res) => {
 
         const post = await Post.find({"destination": {$regex: ".*" + search + ".", $options:"i"}})
 
-        if (!post) {
+        if (post.length == 0) {
             return res.status(404).send()
         }
+
         res.send(post)
     } catch (e) {
         res.status(500).send(e)
