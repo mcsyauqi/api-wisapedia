@@ -145,4 +145,21 @@ router.delete('/posts/:postId', auth, async (req, res) => {
     }
 })
 
+router.get('/posts/search/:word', auth, async (req, res) => {
+    const search = req.params.word
+
+    try {
+
+        const post = await Post.find({"destination": {$regex: ".*" + search + ".", $options:"i"}})
+
+        if (!post) {
+            return res.status(404).send()
+        }
+        res.send(post)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+
 module.exports = router
