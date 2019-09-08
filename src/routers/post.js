@@ -86,7 +86,7 @@ router.get('/posts/:postId', auth, async (req, res) => {
 
 router.patch('/posts/:postId', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpates = ['destination', 'start','finish', 'person','route', 'description']
+    const allowedUpates = ['destination', 'start','finish', 'capacity','route', 'description']
     const isValidOperation = updates.every((update) => allowedUpates.includes(update))
 
     if (!isValidOperation) {
