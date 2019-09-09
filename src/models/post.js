@@ -10,17 +10,10 @@ const postSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },    
-    finish: {
-        type: Date,
-        required: true,
-    },
     capacity: {
         type: Number,
         required: true,
     },
-    person: [{
-        type: mongoose.Schema.Types.ObjectId
-    }],
     route: {
         type: String,
         required: true,
@@ -30,10 +23,6 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    completed: {
-        type: Boolean,
-        default: false
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

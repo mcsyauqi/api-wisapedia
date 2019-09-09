@@ -12,7 +12,6 @@ const {
 
 const router = new express.Router()
 
-
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
@@ -119,123 +118,6 @@ router.post('/users/bookmarks/:postId', auth, async (req, res) => {
             } else {
                 return res.send({error: "Already bookmark this post!"})
             }
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.post('/users/trips/:postId', auth, async (req, res) => {
-
-    const postId = req.params.postId
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        await user.trips.push(postId);
-
-        const post = await Post.findById(postId)
-
-        if (post.capacity > post.person.length) {
-            userOnTrip = post.person.includes(req.user._id);
-
-            if(userOnTrip ==  false) {
-                await post.person.push(req.user._id);
-                post.save()
-            } else {
-                return res.send({error: "You joined already!"})
-            }
-        } else {
-            return res.send({error: "Full capacity!"})
-        }
-        
-        user.save()
-        res.status(200).send(user)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.get('/users/bookmarks', auth, async (req, res) => {
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        if (user.bookmarks.length == 0) {
-            return res.status(404).send({error: "No bookmarks found!"})
-        }
-
-        const post = await Post.find({
-            _id: user.bookmarks
-        })
-    
-        res.send(post)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.delete('/users/bookmarks/:postId', auth, async (req, res) => {
-
-    const postId = req.params.postId
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        user.bookmarks =  await user.bookmarks.filter(item => item !== postId)
-
-        var remain = user.bookmarks.filter(function(value, index, arr){
-
-            return value != postId;
-        
-        });
-
-        user.bookmarks = remain
-
-        user.save()
-        res.status(200).send(user)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.get('/users/trips', auth, async (req, res) => {
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        if (user.trips.length == 0) {
-            return res.status(404).send()
-        }
-
-        const post = await Post.find({
-            _id: user.trips
-        })
-    
-        res.send(post)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.delete('/users/trips/:postId', auth, async (req, res) => {
-
-    const postId = req.params.postId
-
-    try {
-        const user = await User.findById(req.user._id)
-
-        user.trips =  await user.trips.filter(item => item !== postId)
-
-        var remain = user.trips.filter(function(value, index, arr){
-
-            return value != postId;
-        
-        });
-
-        user.trips = remain
-
-        user.save()
-        res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
     }

@@ -7,7 +7,6 @@ const aws = require('aws-sdk')
 
 const router = new express.Router()
 
-
 router.post('/posts', auth, upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.send({
@@ -22,15 +21,7 @@ router.post('/posts', auth, upload.single('image'), async (req, res) => {
                 image: req.file.location,
                 person: [req.user._id]
             })
-        
-            const postId = post._id
-    
-                const user = await User.findById(req.user._id)
-    
-                await user.trips.push(postId);
-                
-                user.save()
-                
+            
             await post.save()
             res.status(201).send(post)
         } catch (e) {
