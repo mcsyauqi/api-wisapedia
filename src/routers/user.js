@@ -123,6 +123,49 @@ router.post('/users/bookmarks/:postId', auth, async (req, res) => {
     }
 })
 
+router.get('/users/bookmarks', auth, async (req, res) => {
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        if (user.bookmarks.length == 0) {
+            return res.status(404).send({error: "No bookmarks found!"})
+        }
+
+        const post = await Post.find({
+            _id: user.bookmarks
+        })
+    
+        res.send(post)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.delete('/users/bookmarks/:postId', auth, async (req, res) => {
+
+    const postId = req.params.postId
+
+    try {
+        const user = await User.findById(req.user._id)
+
+        user.bookmarks =  await user.bookmarks.filter(item => item !== postId)
+
+        var remain = user.bookmarks.filter(function(value, index, arr){
+
+            return value != postId;
+        
+        });
+
+        user.bookmarks = remain
+
+        user.save()
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.get('/users/:userId/avatar', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId)
