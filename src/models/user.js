@@ -52,6 +52,9 @@ const userSchema = new mongoose.Schema({
     bookmarks: [{
             type: mongoose.Schema.Types.ObjectId
     }],
+    trips: [{
+            type: mongoose.Schema.Types.ObjectId
+    }],
     verified: {
         type: Boolean,
         default: false
