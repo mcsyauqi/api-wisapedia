@@ -52,9 +52,15 @@ const userSchema = new mongoose.Schema({
     bookmarks: [{
             type: mongoose.Schema.Types.ObjectId
     }],
-    trips: [{
-            type: mongoose.Schema.Types.ObjectId
-    }],
+    // bookmarks: [{
+    //     bookmark: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //     },
+    //     isBookmark: {
+    //         type: Boolean,
+    //         default: true
+    //     }
+    // }],
     verified: {
         type: Boolean,
         default: false

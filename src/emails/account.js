@@ -7,7 +7,7 @@ const sendWelcomeEmail = (email, name, userId) => {
         to: email,
         from: 'info@wisapedia.com',
         subject: 'Welcome to the app!',
-        text: `Welcome to the app, ${name}. Let me know how you get along with the app. Here is your verification code: \n ${userId}`
+        html: `Welcome to the app, ${name}. Let me know how you get along with the app. Here is your verification code: <br><strong><font size="15">${userId}</font></strong>`
     })
 }
 
