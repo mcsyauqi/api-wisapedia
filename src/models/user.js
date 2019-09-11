@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        default: ''
+        default: 'Indonesia'
     }
 }, {
     timestamps: true

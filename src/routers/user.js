@@ -275,4 +275,26 @@ router.post('/users/contact-us/:description', auth, async (req, res) => {
     }
 })
 
+// router.post('/users/bookmarks/:postId', auth, async (req, res) => {
+
+//     const postId = req.params.postId
+
+//     try {
+//         const user = await User.findById(req.user._id)
+
+//         userBookmarks = user.bookmarks.includes(postId);
+//         console.log(userBookmarks)
+
+//             if(userBookmarks ==  false) {
+//                 await user.bookmarks.push(postId);
+//                 user.save()
+//                 res.status(200).send(user)
+//             } else {
+//                 return res.send({error: "Already bookmark this post!"})
+//             }
+//     } catch (e) {
+//         res.status(400).send(e)
+//     }
+// })
+
 module.exports = router
