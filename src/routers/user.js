@@ -93,7 +93,7 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
             res.send({error: "ERROR in file Deleting : " + JSON.stringify(err)})
         }
 
-            req.user.avatar = 'https://wisapedia-uploads.s3-ap-southeast-1.amazonaws.com/default_ava.png'
+            req.user.avatar = 'http://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png'
 
             await req.user.save()
             res.send({success: "File deleted successfully"})
