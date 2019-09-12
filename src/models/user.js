@@ -47,7 +47,8 @@ const userSchema = new mongoose.Schema({
     }],
     avatar: {
         type: String,
-        default: 'http://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png'
+        default: 'https://wisapedia-uploads.s3-ap-southeast-1.amazonaws.com/default_ava.png',
+        // default: 'http://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png'
     },
     bookmarks: [{
             type: mongoose.Schema.Types.ObjectId
