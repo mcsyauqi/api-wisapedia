@@ -53,16 +53,6 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
-router.post('/users/logoutAll', auth, async (req, res) => {
-    try {
-        req.user.tokens = []
-        await req.user.save()
-        res.send({success: "Logout all success!"})
-    } catch (e) {
-        res.status(500).send()
-    }
-})
-
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
     req.user.avatar = req.file.location
     await req.user.save()
@@ -232,16 +222,6 @@ router.patch('/users/me', auth, async (req, res) => {
     }
 })
 
-router.delete('/users/me', auth, async (req, res) => {
-    try {
-        await req.user.remove()
-        sendCancelationEmail(req.user.email, req.user.name)
-        res.send(req.user)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
 router.post('/users/verifyme/:verificationCode', auth, async (req, res) => {
 
 
@@ -274,27 +254,5 @@ router.post('/users/contact-us/:description', auth, async (req, res) => {
         res.status(400).send(e)
     }
 })
-
-// router.post('/users/bookmarks/:postId', auth, async (req, res) => {
-
-//     const postId = req.params.postId
-
-//     try {
-//         const user = await User.findById(req.user._id)
-
-//         userBookmarks = user.bookmarks.includes(postId);
-//         console.log(userBookmarks)
-
-//             if(userBookmarks ==  false) {
-//                 await user.bookmarks.push(postId);
-//                 user.save()
-//                 res.status(200).send(user)
-//             } else {
-//                 return res.send({error: "Already bookmark this post!"})
-//             }
-//     } catch (e) {
-//         res.status(400).send(e)
-//     }
-// })
 
 module.exports = router
